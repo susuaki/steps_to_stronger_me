@@ -496,3 +496,219 @@ button {
         width: 100%;
     }
 }
+
+/* 達成度・スタンプカード機能のスタイル */
+.achievement-overview {
+    margin-bottom: 2rem;
+}
+
+.achievement-summary {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+    text-align: center;
+}
+
+.today-achievement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.today-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.achievement-stamp {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.achievement-stamp.hanafuda {
+    font-size: 3.5rem;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.achievement-stamp.double-circle {
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.5);
+}
+
+.achievement-stamp.circle {
+    color: #87ceeb;
+}
+
+.achievement-stamp.empty {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* カレンダービューのスタイル */
+.calendar-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calendar-controls button {
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-controls button:hover {
+    background: #5a6fd8;
+}
+
+#currentMonth {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    min-width: 120px;
+    text-align: center;
+}
+
+.calendar-grid {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #f8f9fa;
+}
+
+.day-header {
+    padding: 0.8rem;
+    text-align: center;
+    font-weight: 600;
+    color: #666;
+    border-right: 1px solid #e0e0e0;
+}
+
+.day-header:last-child {
+    border-right: none;
+}
+
+.calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+    min-height: 60px;
+    padding: 0.5rem;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.calendar-day:last-child {
+    border-right: none;
+}
+
+.calendar-day:hover {
+    background: #f0f4ff;
+}
+
+.calendar-day.other-month {
+    color: #ccc;
+    background: #fafafa;
+}
+
+.calendar-day.today {
+    background: #e3f2fd;
+    border: 2px solid #2196f3;
+    font-weight: 600;
+}
+
+.calendar-day.has-record {
+    background: #f0f8ff;
+}
+
+.day-number {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.day-achievement {
+    font-size: 1.5rem;
+    margin-top: 0.2rem;
+}
+
+.calendar-day.has-record .day-achievement {
+    animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-5px); }
+    60% { transform: translateY(-3px); }
+}
+
+/* 日別詳細セクション */
+.daily-detail {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid #e0e0e0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .achievement-summary {
+        padding: 1rem;
+    }
+    
+    .today-achievement {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .achievement-stamp {
+        font-size: 2.5rem;
+    }
+    
+    .achievement-stamp.hanafuda {
+        font-size: 3rem;
+    }
+    
+    .calendar-day {
+        min-height: 50px;
+        padding: 0.3rem;
+    }
+    
+    .day-achievement {
+        font-size: 1.2rem;
+    }
+    
+    #currentMonth {
+        font-size: 1.1rem;
+        min-width: 100px;
+    }
+}

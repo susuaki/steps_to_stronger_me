@@ -4,6 +4,7 @@ class TrainingTracker {
             menus: [],
             records: {}
         };
+        this.currentCalendarDate = new Date();
         this.init();
     }
 
@@ -14,6 +15,7 @@ class TrainingTracker {
         this.displayCurrentDate();
         this.renderDailyView();
         this.renderMenuManagement();
+        this.updateTodayAchievement();
     }
 
     // ローカルストレージ関連
@@ -110,6 +112,15 @@ class TrainingTracker {
         // 履歴表示
         document.getElementById('showHistory').addEventListener('click', () => {
             this.showHistoryForDate();
+        });
+        
+        // カレンダー操作
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            this.changeMonth(-1);
+        });
+        
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            this.changeMonth(1);
         });
     }
 
@@ -362,6 +373,8 @@ class TrainingTracker {
         this.data.records[today].custom.push(record);
         this.saveData();
         this.renderDailyView();
+        this.updateTodayAchievement();
+        this.renderCalendarView();
 
         // フォームクリア
         document.getElementById('customMenuName').value = '';
@@ -392,6 +405,8 @@ class TrainingTracker {
         }
 
         this.saveData();
+        this.updateTodayAchievement();
+        this.renderCalendarView();
     }
 
     // カスタム記録削除
@@ -403,6 +418,8 @@ class TrainingTracker {
             );
             this.saveData();
             this.renderDailyView();
+            this.updateTodayAchievement();
+            this.renderCalendarView();
         }
     }
 
@@ -562,12 +579,201 @@ class TrainingTracker {
         return labels[type] || type;
     }
 
+    // トレーニング時間の合計計算（分単位）
+    calculateTotalTrainingTime(date) {
+        const records = this.data.records[date];
+        if (!records) return 0;
+        
+        let totalTime = 0;
+        
+        // 定期メニューから時間を計算
+        Object.entries(records.predefined || {}).forEach(([menuId, record]) => {
+            const menu = this.data.menus.find(m => m.id === menuId);
+            if (!menu || !menu.fields) return;
+            
+            menu.fields.forEach(field => {
+                if ((field.name === 'time' || field.unit === '分' || field.unit === '時間') && record[field.name]) {
+                    let time = record[field.name];
+                    // 時間単位の場合は分に変換
+                    if (field.unit === '時間') {
+                        time *= 60;
+                    }
+                    totalTime += time;
+                }
+            });
+        });
+        
+        // カスタム記録から時間を計算
+        (records.custom || []).forEach(record => {
+            if (record.values) {
+                switch (record.type) {
+                    case 'single':
+                        if (record.values.unit === '分') {
+                            totalTime += record.values.value || 0;
+                        } else if (record.values.unit === '時間') {
+                            totalTime += (record.values.value || 0) * 60;
+                        }
+                        break;
+                    case 'distance_time':
+                        if (record.values.timeUnit === '分') {
+                            totalTime += record.values.time || 0;
+                        } else if (record.values.timeUnit === '時間') {
+                            totalTime += (record.values.time || 0) * 60;
+                        }
+                        break;
+                    case 'custom_multi':
+                        if (record.values.unit1 === '分') {
+                            totalTime += record.values.value1 || 0;
+                        } else if (record.values.unit1 === '時間') {
+                            totalTime += (record.values.value1 || 0) * 60;
+                        }
+                        if (record.values.unit2 === '分') {
+                            totalTime += record.values.value2 || 0;
+                        } else if (record.values.unit2 === '時間') {
+                            totalTime += (record.values.value2 || 0) * 60;
+                        }
+                        break;
+                }
+            } else if (record.unit === '分') {
+                // 旧形式との互換性
+                totalTime += record.value || 0;
+            } else if (record.unit === '時間') {
+                totalTime += (record.value || 0) * 60;
+            }
+        });
+        
+        return totalTime;
+    }
+    
+    // 達成度計算
+    calculateAchievement(date) {
+        const records = this.data.records[date];
+        if (!records) return null;
+        
+        let completedPredefined = 0;
+        let totalPredefined = this.data.menus.length;
+        
+        // 定期メニューの完了数をカウント
+        Object.values(records.predefined || {}).forEach(record => {
+            if (record.checked || Object.keys(record).some(key => key !== 'checked' && record[key])) {
+                completedPredefined++;
+            }
+        });
+        
+        // カスタム記録の数
+        const customCount = (records.custom || []).length;
+        
+        // トレーニング時間を計算
+        const totalTrainingTime = this.calculateTotalTrainingTime(date);
+        
+        // 総メニュー数（定期 + カスタム）
+        const totalMenus = completedPredefined + customCount;
+        
+        // 花丸条件: 5つ以上のメニューまたは1時間（60分）以上のトレーニング
+        if (totalMenus >= 5 || totalTrainingTime >= 60) {
+            return '🌸'; // 花丸
+        } else if (completedPredefined >= 4) {
+            return '◎'; // 二重丸
+        } else if (completedPredefined >= 3) {
+            return '○'; // 丸
+        }
+        
+        return null;
+    }
+    
+    // 今日の達成度更新
+    updateTodayAchievement() {
+        const today = this.getCurrentDateString();
+        const achievement = this.calculateAchievement(today);
+        const stampElement = document.getElementById('todayStamp');
+        
+        if (stampElement) {
+            if (achievement) {
+                stampElement.textContent = achievement;
+                stampElement.className = 'achievement-stamp ' + this.getStampClass(achievement);
+            } else {
+                stampElement.textContent = '○';
+                stampElement.className = 'achievement-stamp empty';
+            }
+        }
+    }
+    
+    // スタンプのCSSクラス取得
+    getStampClass(stamp) {
+        switch (stamp) {
+            case '🌸': return 'hanafuda';
+            case '◎': return 'double-circle';
+            case '○': return 'circle';
+            default: return 'empty';
+        }
+    }
+    
+    // カレンダー表示
+    renderCalendarView() {
+        const container = document.getElementById('calendarView');
+        const year = this.currentCalendarDate.getFullYear();
+        const month = this.currentCalendarDate.getMonth();
+        
+        // 月表示を更新
+        document.getElementById('currentMonth').textContent = `${year}年${month + 1}月`;
+        
+        // カレンダーグリッド生成
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+        
+        let html = '<div class="calendar-header">';
+        const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+        dayNames.forEach(day => {
+            html += `<div class="day-header">${day}</div>`;
+        });
+        html += '</div><div class="calendar-body">';
+        
+        for (let i = 0; i < 42; i++) {
+            const currentDate = new Date(startDate);
+            currentDate.setDate(startDate.getDate() + i);
+            const dateString = currentDate.toISOString().split('T')[0];
+            const isCurrentMonth = currentDate.getMonth() === month;
+            const isToday = dateString === this.getCurrentDateString();
+            const achievement = this.calculateAchievement(dateString);
+            
+            let dayClass = 'calendar-day';
+            if (!isCurrentMonth) dayClass += ' other-month';
+            if (isToday) dayClass += ' today';
+            if (achievement) dayClass += ' has-record';
+            
+            html += `
+                <div class="${dayClass}" onclick="app.selectCalendarDate('${dateString}')">
+                    <div class="day-number">${currentDate.getDate()}</div>
+                    <div class="day-achievement">${achievement || ''}</div>
+                </div>
+            `;
+        }
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+    
+    // カレンダーの月変更
+    changeMonth(delta) {
+        this.currentCalendarDate.setMonth(this.currentCalendarDate.getMonth() + delta);
+        this.renderCalendarView();
+    }
+    
+    // カレンダーから日付選択
+    selectCalendarDate(dateString) {
+        document.getElementById('historyDate').value = dateString;
+        this.showHistoryForDate();
+    }
+    
     // 履歴表示
     setupHistoryView() {
         const dateInput = document.getElementById('historyDate');
         if (!dateInput.value) {
             dateInput.value = this.getCurrentDateString();
         }
+        this.renderCalendarView();
     }
 
     showHistoryForDate() {

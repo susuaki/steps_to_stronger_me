@@ -77,8 +77,28 @@
 
         <!-- 履歴タブ -->
         <div id="history-tab" class="tab-content">
+            <section class="achievement-overview">
+                <h2>達成状況</h2>
+                <div class="achievement-summary">
+                    <div class="today-achievement">
+                        <span class="today-label">今日の達成度</span>
+                        <span id="todayStamp" class="achievement-stamp">○</span>
+                    </div>
+                </div>
+            </section>
+            
             <section class="history">
-                <h2>記録履歴</h2>
+                <h2>カレンダー履歴</h2>
+                <div class="calendar-controls">
+                    <button id="prevMonth">&lt;</button>
+                    <span id="currentMonth">2025年1月</span>
+                    <button id="nextMonth">&gt;</button>
+                </div>
+                <div id="calendarView" class="calendar-grid"></div>
+            </section>
+            
+            <section class="daily-detail">
+                <h2>日別詳細</h2>
                 <div class="date-selector">
                     <input type="date" id="historyDate">
                     <button id="showHistory">表示</button>
