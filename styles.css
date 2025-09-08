@@ -334,6 +334,94 @@ button {
     border: 2px dashed #ddd;
 }
 
+/* 複数値入力用のスタイル */
+.value-inputs {
+    width: 100%;
+}
+
+.single-input, .multi-input, .custom-multi-input {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.multi-input input {
+    width: 80px;
+}
+
+.multi-input span {
+    font-size: 0.8rem;
+    color: #666;
+    margin-right: 0.5rem;
+}
+
+.custom-multi-input input[type="number"] {
+    width: 80px;
+}
+
+.custom-multi-input input[type="text"] {
+    width: 60px;
+}
+
+.fields-config {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.multi-fields, .custom-fields {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.multi-fields input, .custom-fields input {
+    flex: 1;
+    min-width: 120px;
+}
+
+.multi-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.field-input {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.field-input input {
+    width: 80px;
+    padding: 0.3rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.field-input .unit {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.menu-management-item .menu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.menu-unit {
+    font-size: 0.8rem;
+    color: #667eea;
+    background: #f0f4ff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    display: inline-block;
+    margin-right: 0.3rem;
+    margin-bottom: 0.2rem;
+}
+
 @media (max-width: 768px) {
     .container {
         margin: 0;
@@ -365,6 +453,39 @@ button {
     .menu-input {
         width: 100%;
         justify-content: flex-end;
+    }
+    
+    .multi-inputs {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .field-input {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .field-input input {
+        width: 100px;
+    }
+    
+    .multi-input {
+        width: 100%;
+    }
+    
+    .multi-input input {
+        flex: 1;
+        min-width: 60px;
+    }
+    
+    .multi-fields, .custom-fields {
+        flex-direction: column;
+    }
+    
+    .multi-fields input, .custom-fields input {
+        width: 100%;
     }
     
     .export-import {

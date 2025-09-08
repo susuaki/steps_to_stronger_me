@@ -34,13 +34,17 @@
                 <div class="entry-form">
                     <input type="text" id="customMenuName" placeholder="メニュー名">
                     <select id="recordType">
-                        <option value="reps">回数</option>
-                        <option value="time">時間</option>
-                        <option value="weight">重量</option>
-                        <option value="distance">距離</option>
+                        <option value="single">単一値</option>
+                        <option value="distance_time">距離と時間</option>
+                        <option value="weight_reps">重量と回数</option>
+                        <option value="custom_multi">カスタム複数値</option>
                     </select>
-                    <input type="number" id="recordValue" placeholder="値">
-                    <input type="text" id="recordUnit" placeholder="単位 (例: kg, 分)">
+                    <div id="customValueInputs" class="value-inputs">
+                        <div class="single-input">
+                            <input type="number" id="recordValue" placeholder="値">
+                            <input type="text" id="recordUnit" placeholder="単位">
+                        </div>
+                    </div>
                     <button id="addCustomRecord">記録追加</button>
                 </div>
                 <div id="customRecords"></div>
@@ -55,11 +59,16 @@
                     <input type="text" id="newMenuName" placeholder="メニュー名">
                     <select id="newMenuType">
                         <option value="checkbox">チェック形式</option>
-                        <option value="reps">回数記録</option>
-                        <option value="time">時間記録</option>
-                        <option value="weight">重量記録</option>
+                        <option value="single">単一値記録</option>
+                        <option value="distance_time">距離と時間</option>
+                        <option value="weight_reps">重量と回数</option>
+                        <option value="custom_multi">カスタム複数値</option>
                     </select>
-                    <input type="text" id="newMenuUnit" placeholder="単位 (必要な場合)">
+                    <div id="menuFieldsConfig" class="fields-config">
+                        <div class="single-field">
+                            <input type="text" id="newMenuUnit" placeholder="単位 (必要な場合)">
+                        </div>
+                    </div>
                     <button id="addMenu">メニュー追加</button>
                 </div>
                 <div id="menuList"></div>
