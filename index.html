@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トレーニング記録アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>トレーニング記録</h1>
+            <div class="date-display">
+                <span id="currentDate"></span>
+            </div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="daily">今日の記録</button>
+            <button class="tab-button" data-tab="menu">メニュー管理</button>
+            <button class="tab-button" data-tab="history">履歴</button>
+            <button class="tab-button" data-tab="settings">設定</button>
+        </nav>
+
+        <!-- 今日の記録タブ -->
+        <div id="daily-tab" class="tab-content active">
+            <section class="predefined-menu">
+                <h2>定期メニュー</h2>
+                <div id="predefinedList"></div>
+            </section>
+
+            <section class="custom-entry">
+                <h2>カスタム記録</h2>
+                <div class="entry-form">
+                    <input type="text" id="customMenuName" placeholder="メニュー名">
+                    <select id="recordType">
+                        <option value="reps">回数</option>
+                        <option value="time">時間</option>
+                        <option value="weight">重量</option>
+                        <option value="distance">距離</option>
+                    </select>
+                    <input type="number" id="recordValue" placeholder="値">
+                    <input type="text" id="recordUnit" placeholder="単位 (例: kg, 分)">
+                    <button id="addCustomRecord">記録追加</button>
+                </div>
+                <div id="customRecords"></div>
+            </section>
+        </div>
+
+        <!-- メニュー管理タブ -->
+        <div id="menu-tab" class="tab-content">
+            <section class="menu-management">
+                <h2>定期メニュー管理</h2>
+                <div class="menu-form">
+                    <input type="text" id="newMenuName" placeholder="メニュー名">
+                    <select id="newMenuType">
+                        <option value="checkbox">チェック形式</option>
+                        <option value="reps">回数記録</option>
+                        <option value="time">時間記録</option>
+                        <option value="weight">重量記録</option>
+                    </select>
+                    <input type="text" id="newMenuUnit" placeholder="単位 (必要な場合)">
+                    <button id="addMenu">メニュー追加</button>
+                </div>
+                <div id="menuList"></div>
+            </section>
+        </div>
+
+        <!-- 履歴タブ -->
+        <div id="history-tab" class="tab-content">
+            <section class="history">
+                <h2>記録履歴</h2>
+                <div class="date-selector">
+                    <input type="date" id="historyDate">
+                    <button id="showHistory">表示</button>
+                </div>
+                <div id="historyDisplay"></div>
+            </section>
+        </div>
+
+        <!-- 設定タブ -->
+        <div id="settings-tab" class="tab-content">
+            <section class="data-management">
+                <h2>データ管理</h2>
+                <div class="export-import">
+                    <button id="exportData">データエクスポート</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                    <button id="importData">データインポート</button>
+                    <button id="clearData" class="danger">全データクリア</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

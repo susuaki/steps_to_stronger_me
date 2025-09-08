@@ -1,0 +1,377 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.date-display {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    background: #f0f0f0;
+}
+
+.tab-button.active {
+    background: #667eea;
+    color: white;
+    border-bottom: 3px solid #5a6fd8;
+}
+
+.tab-content {
+    display: none;
+    padding: 2rem;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+section h2 {
+    margin-bottom: 1rem;
+    color: #444;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.entry-form, .menu-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.entry-form input, .menu-form input, .entry-form select, .menu-form select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.entry-form input[type="text"], .menu-form input[type="text"] {
+    flex: 2;
+    min-width: 150px;
+}
+
+.entry-form input[type="number"], .menu-form input[type="number"] {
+    flex: 1;
+    min-width: 80px;
+}
+
+.entry-form select, .menu-form select {
+    flex: 1;
+    min-width: 100px;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#addCustomRecord, #addMenu {
+    background: #28a745;
+    color: white;
+}
+
+#addCustomRecord:hover, #addMenu:hover {
+    background: #218838;
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.menu-name {
+    font-weight: 500;
+    flex: 2;
+}
+
+.menu-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.menu-input input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.menu-input input[type="number"] {
+    width: 80px;
+    padding: 0.3rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.unit {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.custom-record {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.record-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.record-name {
+    font-weight: 500;
+}
+
+.record-value {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.record-time {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.menu-management-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.menu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.menu-type {
+    font-size: 0.8rem;
+    color: #666;
+    background: #e9ecef;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.menu-unit {
+    font-size: 0.8rem;
+    color: #667eea;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+.date-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.date-selector input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#showHistory {
+    background: #667eea;
+    color: white;
+}
+
+#showHistory:hover {
+    background: #5a6fd8;
+}
+
+.history-section {
+    margin-bottom: 1.5rem;
+}
+
+.history-section h3 {
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    margin-bottom: 0.3rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.export-import {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#exportData, #importData {
+    background: #17a2b8;
+    color: white;
+}
+
+#exportData:hover, #importData:hover {
+    background: #138496;
+}
+
+#clearData {
+    background: #dc3545;
+    color: white;
+}
+
+#clearData:hover {
+    background: #c82333;
+}
+
+.danger {
+    background: #dc3545 !important;
+    color: white !important;
+}
+
+.empty-state {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 0;
+        box-shadow: none;
+    }
+    
+    header {
+        padding: 1.5rem 1rem;
+    }
+    
+    .tab-content {
+        padding: 1rem;
+    }
+    
+    .entry-form, .menu-form {
+        flex-direction: column;
+    }
+    
+    .entry-form input, .menu-form input, .entry-form select, .menu-form select {
+        width: 100%;
+    }
+    
+    .menu-item, .custom-record, .menu-management-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .menu-input {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .export-import {
+        flex-direction: column;
+    }
+    
+    .export-import button {
+        width: 100%;
+    }
+}
