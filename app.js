@@ -30,9 +30,24 @@ class TrainingTracker {
         localStorage.setItem('trainingData', JSON.stringify(this.data));
     }
 
-    // 日付関連
+    // 日付関連（日本時間で取得）
     getCurrentDateString() {
-        return new Date().toISOString().split('T')[0];
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    // 日付文字列をローカル日付に変換
+    getLocalDateString(date) {
+        if (typeof date === 'string') {
+            return date;
+        }
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     displayCurrentDate() {
@@ -733,7 +748,7 @@ class TrainingTracker {
         for (let i = 0; i < 42; i++) {
             const currentDate = new Date(startDate);
             currentDate.setDate(startDate.getDate() + i);
-            const dateString = currentDate.toISOString().split('T')[0];
+            const dateString = this.getLocalDateString(currentDate);
             const isCurrentMonth = currentDate.getMonth() === month;
             const isToday = dateString === this.getCurrentDateString();
             const achievement = this.calculateAchievement(dateString);
