@@ -95,38 +95,6 @@
                     <button id="showHistory">表示</button>
                 </div>
                 <div id="historyDisplay"></div>
-                
-                <!-- 過去日付への記録追加 -->
-                <div id="pastRecordSection" style="display: none;">
-                    <h3>この日に記録を追加</h3>
-                    
-                    <!-- 定期メニュー -->
-                    <div class="past-predefined">
-                        <h4>定期メニュー</h4>
-                        <div id="pastPredefinedList"></div>
-                    </div>
-                    
-                    <!-- カスタム記録 -->
-                    <div class="past-custom">
-                        <h4>カスタム記録を追加</h4>
-                        <div class="entry-form">
-                            <input type="text" id="pastCustomMenuName" placeholder="メニュー名">
-                            <select id="pastRecordType">
-                                <option value="single">単一値</option>
-                                <option value="distance_time">距離と時間</option>
-                                <option value="weight_reps">重量と回数</option>
-                                <option value="custom_multi">カスタム複数値</option>
-                            </select>
-                            <div id="pastCustomValueInputs" class="value-inputs">
-                                <div class="single-input">
-                                    <input type="number" id="pastRecordValue" placeholder="値">
-                                    <input type="text" id="pastRecordUnit" placeholder="単位">
-                                </div>
-                            </div>
-                            <button id="addPastCustomRecord">記録追加</button>
-                        </div>
-                    </div>
-                </div>
             </section>
         </div>
 
