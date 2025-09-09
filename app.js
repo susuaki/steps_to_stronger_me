@@ -396,6 +396,8 @@ class TrainingTracker {
 
     // 定期メニューの記録更新（複数値対応）
     updatePredefinedRecord(menuId, fieldName, value, isChecked) {
+        console.log(`UpdatePredefinedRecord called:`, { menuId, fieldName, value, isChecked });
+        
         const today = this.getCurrentDateString();
         if (!this.data.records[today]) {
             this.data.records[today] = { predefined: {}, custom: [] };
@@ -407,16 +409,21 @@ class TrainingTracker {
 
         if (isChecked !== undefined) {
             this.data.records[today].predefined[menuId] = { checked: isChecked };
+            console.log(`Set checked for menu ${menuId}:`, isChecked);
         } else if (fieldName && value !== undefined && value !== '') {
             this.data.records[today].predefined[menuId][fieldName] = parseFloat(value);
+            console.log(`Set field ${fieldName} for menu ${menuId}:`, parseFloat(value));
         } else if (fieldName && (value === undefined || value === '')) {
+            console.log(`Deleting field ${fieldName} for menu ${menuId} (empty value)`);
             delete this.data.records[today].predefined[menuId][fieldName];
             // 全てのフィールドが空になったら記録を削除
             if (Object.keys(this.data.records[today].predefined[menuId]).length === 0) {
+                console.log(`Deleting entire menu ${menuId} (no fields left)`);
                 delete this.data.records[today].predefined[menuId];
             }
         }
 
+        console.log(`Menu ${menuId} after update:`, this.data.records[today].predefined[menuId]);
         this.saveData();
         this.renderCalendarView();
     }
@@ -459,7 +466,7 @@ class TrainingTracker {
                     const checked = record?.checked ? 'checked' : '';
                     inputElement = `
                         <input type="checkbox" id="menu-${menu.id}" ${checked}
-                               onchange="app.updatePredefinedRecord('${menu.id}', undefined, this.checked)">
+                               onchange="app.updatePredefinedRecord('${menu.id}', undefined, undefined, this.checked)">
                         <label for="menu-${menu.id}">完了</label>
                     `;
                     break;
@@ -665,10 +672,28 @@ class TrainingTracker {
         let totalPredefined = this.data.menus.length;
         
         // 定期メニューの完了数をカウント
-        Object.values(records.predefined || {}).forEach(record => {
-            if (record.checked || Object.keys(record).some(key => key !== 'checked' && record[key])) {
+        Object.entries(records.predefined || {}).forEach(([menuId, record]) => {
+            console.log(`Checking menu ${menuId}:`, record);
+            
+            // チェックボックス形式の場合
+            const hasChecked = record.checked === true;
+            
+            // 値入力形式の場合（空でない値があるかチェック）
+            const hasValues = Object.keys(record).some(key => {
+                if (key === 'checked') return false;
+                const value = record[key];
+                return value !== null && value !== undefined && value !== '' && value !== 0;
+            });
+            
+            const isCompleted = hasChecked || hasValues;
+            
+            if (isCompleted) {
                 completedPredefined++;
             }
+            
+            console.log(`  - hasChecked: ${hasChecked}`);
+            console.log(`  - hasValues: ${hasValues}`);
+            console.log(`  - isCompleted: ${isCompleted}`);
         });
         
         // カスタム記録の数
@@ -681,24 +706,32 @@ class TrainingTracker {
         const totalMenus = completedPredefined + customCount;
         
         // デバッグログ追加
-        console.log(`Achievement calc for ${date}:`, {
-            completedPredefined,
-            customCount,
-            totalMenus,
-            totalTrainingTime,
-            records: records
-        });
+        console.log(`=== Achievement calc for ${date} ===`);
+        console.log(`Completed predefined: ${completedPredefined}`);
+        console.log(`Custom count: ${customCount}`);
+        console.log(`Total menus: ${totalMenus}`);
+        console.log(`Total training time: ${totalTrainingTime}`);
+        console.log(`Records:`, records);
         
-        // 達成度判定を緩和：1つでも記録があれば○
+        // 達成度判定（高い順に判定）
+        let achievement = null;
+        
         if (totalMenus >= 5 || totalTrainingTime >= 60) {
-            return '🌸'; // 花丸
+            achievement = '🌸'; // 花丸
+            console.log('Achievement: 🌸 (5+ menus or 60+ min)');
         } else if (completedPredefined >= 3 || totalMenus >= 3) {
-            return '◎'; // 二重丸
+            achievement = '◎'; // 二重丸
+            console.log('Achievement: ◎ (3+ predefined or 3+ total)');
         } else if (completedPredefined >= 1 || customCount >= 1) {
-            return '○'; // 丸 - 1つでも記録があれば○
+            achievement = '○'; // 丸
+            console.log('Achievement: ○ (1+ predefined or 1+ custom)');
+        } else {
+            console.log('Achievement: none (no records)');
         }
         
-        return null;
+        console.log(`Final result: ${achievement}`);
+        console.log('========================');
+        return achievement;
     }
     
     
