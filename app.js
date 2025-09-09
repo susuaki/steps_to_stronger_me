@@ -15,7 +15,7 @@ class TrainingTracker {
         this.displayCurrentDate();
         this.renderDailyView();
         this.renderMenuManagement();
-        this.updateTodayAchievement();
+        this.renderCalendarView();
     }
 
     // ローカルストレージ関連
@@ -388,7 +388,6 @@ class TrainingTracker {
         this.data.records[today].custom.push(record);
         this.saveData();
         this.renderDailyView();
-        this.updateTodayAchievement();
         this.renderCalendarView();
 
         // フォームクリア
@@ -420,7 +419,6 @@ class TrainingTracker {
         }
 
         this.saveData();
-        this.updateTodayAchievement();
         this.renderCalendarView();
     }
 
@@ -433,7 +431,6 @@ class TrainingTracker {
             );
             this.saveData();
             this.renderDailyView();
-            this.updateTodayAchievement();
             this.renderCalendarView();
         }
     }
@@ -696,22 +693,6 @@ class TrainingTracker {
         return null;
     }
     
-    // 今日の達成度更新
-    updateTodayAchievement() {
-        const today = this.getCurrentDateString();
-        const achievement = this.calculateAchievement(today);
-        const stampElement = document.getElementById('todayStamp');
-        
-        if (stampElement) {
-            if (achievement) {
-                stampElement.textContent = achievement;
-                stampElement.className = 'achievement-stamp ' + this.getStampClass(achievement);
-            } else {
-                stampElement.textContent = '○';
-                stampElement.className = 'achievement-stamp empty';
-            }
-        }
-    }
     
     // スタンプのCSSクラス取得
     getStampClass(stamp) {
