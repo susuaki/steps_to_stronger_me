@@ -428,6 +428,17 @@ class TrainingTracker {
         this.renderCalendarView();
     }
 
+    // 定期メニューの記録削除
+    deletePredefinedRecord(menuId) {
+        const today = this.getCurrentDateString();
+        if (this.data.records[today] && this.data.records[today].predefined && this.data.records[today].predefined[menuId]) {
+            delete this.data.records[today].predefined[menuId];
+            this.saveData();
+            this.renderDailyView();
+            this.renderCalendarView();
+        }
+    }
+
     // カスタム記録削除
     deleteCustomRecord(recordId) {
         const today = this.getCurrentDateString();
@@ -438,6 +449,12 @@ class TrainingTracker {
             this.saveData();
             this.renderDailyView();
             this.renderCalendarView();
+            
+            // 履歴表示も更新
+            const historyDate = document.getElementById('historyDate');
+            if (historyDate && historyDate.value === today) {
+                this.showHistoryForDate();
+            }
         }
     }
 
@@ -503,6 +520,7 @@ class TrainingTracker {
                     <div class="menu-input">
                         ${inputElement}
                     </div>
+                    ${record && Object.keys(record).length > 0 ? `<button class="delete-btn small" onclick="app.deletePredefinedRecord('${menu.id}')">削除</button>` : ''}
                 </div>
             `;
         }).join('');
@@ -875,6 +893,7 @@ class TrainingTracker {
                         <div class="history-item">
                             <span class="menu-name">${menu.name}</span>
                             <span class="record-value">${value}</span>
+                            <button class="delete-btn small" onclick="app.deletePredefinedRecordFromHistory('${menuId}', '${date}')">削除</button>
                         </div>
                     `;
                 }
@@ -922,6 +941,7 @@ class TrainingTracker {
                         <span class="menu-name">${record.name}</span>
                         <span class="record-value">${valueDisplay}</span>
                         <span class="record-time">${record.timestamp}</span>
+                        <button class="delete-btn small" onclick="app.deleteCustomRecordFromHistory('${record.id}', '${date}')">削除</button>
                     </div>
                 `;
             });
@@ -929,6 +949,38 @@ class TrainingTracker {
         }
 
         container.innerHTML = html || '<p class="empty-state">この日の記録はありません。</p>';
+    }
+
+    // 履歴から定期メニュー記録を削除
+    deletePredefinedRecordFromHistory(menuId, date) {
+        if (this.data.records[date] && this.data.records[date].predefined && this.data.records[date].predefined[menuId]) {
+            delete this.data.records[date].predefined[menuId];
+            this.saveData();
+            this.showHistoryForDate(); // 履歴表示を更新
+            this.renderCalendarView(); // カレンダーも更新
+            
+            // 今日の記録の場合は今日の表示も更新
+            if (date === this.getCurrentDateString()) {
+                this.renderDailyView();
+            }
+        }
+    }
+
+    // 履歴からカスタム記録を削除
+    deleteCustomRecordFromHistory(recordId, date) {
+        if (this.data.records[date] && this.data.records[date].custom) {
+            this.data.records[date].custom = this.data.records[date].custom.filter(
+                record => record.id !== recordId
+            );
+            this.saveData();
+            this.showHistoryForDate(); // 履歴表示を更新
+            this.renderCalendarView(); // カレンダーも更新
+            
+            // 今日の記録の場合は今日の表示も更新
+            if (date === this.getCurrentDateString()) {
+                this.renderDailyView();
+            }
+        }
     }
 
     // データエクスポート

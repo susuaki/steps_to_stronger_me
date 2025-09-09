@@ -255,6 +255,12 @@ button {
     background: #c82333;
 }
 
+.delete-btn.small {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+}
+
 .date-selector {
     display: flex;
     gap: 0.5rem;
