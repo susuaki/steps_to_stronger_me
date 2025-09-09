@@ -15,7 +15,6 @@ class TrainingTracker {
         this.displayCurrentDate();
         this.renderDailyView();
         this.renderMenuManagement();
-        this.renderCalendarView();
     }
 
     // ローカルストレージ関連
@@ -681,13 +680,22 @@ class TrainingTracker {
         // 総メニュー数（定期 + カスタム）
         const totalMenus = completedPredefined + customCount;
         
-        // 花丸条件: 5つ以上のメニューまたは1時間（60分）以上のトレーニング
+        // デバッグログ追加
+        console.log(`Achievement calc for ${date}:`, {
+            completedPredefined,
+            customCount,
+            totalMenus,
+            totalTrainingTime,
+            records: records
+        });
+        
+        // 達成度判定を緩和：1つでも記録があれば○
         if (totalMenus >= 5 || totalTrainingTime >= 60) {
             return '🌸'; // 花丸
-        } else if (completedPredefined >= 4) {
+        } else if (completedPredefined >= 3 || totalMenus >= 3) {
             return '◎'; // 二重丸
-        } else if (completedPredefined >= 3) {
-            return '○'; // 丸
+        } else if (completedPredefined >= 1 || customCount >= 1) {
+            return '○'; // 丸 - 1つでも記録があれば○
         }
         
         return null;
@@ -706,12 +714,27 @@ class TrainingTracker {
     
     // カレンダー表示
     renderCalendarView() {
+        console.log('renderCalendarView called'); // デバッグログ
         const container = document.getElementById('calendarView');
+        if (!container) {
+            console.log('calendarView element not found'); // デバッグログ
+            return;
+        }
+        
+        // タブが表示されているかチェック
+        const historyTab = document.getElementById('history-tab');
+        const isHistoryTabActive = historyTab && historyTab.classList.contains('active');
+        console.log('History tab active:', isHistoryTabActive); // デバッグログ
+        
         const year = this.currentCalendarDate.getFullYear();
         const month = this.currentCalendarDate.getMonth();
+        console.log('Rendering calendar for:', year, month); // デバッグログ
         
         // 月表示を更新
-        document.getElementById('currentMonth').textContent = `${year}年${month + 1}月`;
+        const monthElement = document.getElementById('currentMonth');
+        if (monthElement) {
+            monthElement.textContent = `${year}年${month + 1}月`;
+        }
         
         // カレンダーグリッド生成
         const firstDay = new Date(year, month, 1);
@@ -748,6 +771,7 @@ class TrainingTracker {
         }
         
         html += '</div>';
+        console.log('Setting calendar HTML:', html.length, 'characters'); // デバッグログ
         container.innerHTML = html;
     }
     
@@ -769,7 +793,10 @@ class TrainingTracker {
         if (!dateInput.value) {
             dateInput.value = this.getCurrentDateString();
         }
-        this.renderCalendarView();
+        // 少し遅延させてカレンダーを表示（タブ表示が完了してから）
+        setTimeout(() => {
+            this.renderCalendarView();
+        }, 100);
     }
 
     showHistoryForDate() {

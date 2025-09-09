@@ -591,6 +591,8 @@ button {
     border-radius: 8px;
     overflow: hidden;
     background: white;
+    min-height: 400px; /* 最小高さを追加 */
+    display: block; /* 確実に表示されるように */
 }
 
 .calendar-header {
@@ -614,6 +616,7 @@ button {
 .calendar-body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    min-height: 350px; /* 本体部分の最小高さ */
 }
 
 .calendar-day {
@@ -623,10 +626,11 @@ button {
     border-bottom: 1px solid #e0e0e0;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    display: flex;
+    display: flex !important; /* 強制表示 */
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    background: white; /* 背景色を明示 */
 }
 
 .calendar-day:last-child {
