@@ -408,8 +408,14 @@ class TrainingTracker {
         }
 
         if (isChecked !== undefined) {
-            this.data.records[today].predefined[menuId] = { checked: isChecked };
-            console.log(`Set checked for menu ${menuId}:`, isChecked);
+            if (isChecked) {
+                this.data.records[today].predefined[menuId] = { checked: isChecked };
+                console.log(`Set checked for menu ${menuId}:`, isChecked);
+            } else {
+                // チェックを外した場合は記録を完全に削除
+                console.log(`Removing menu ${menuId} (unchecked)`);
+                delete this.data.records[today].predefined[menuId];
+            }
         } else if (fieldName && value !== undefined && value !== '') {
             this.data.records[today].predefined[menuId][fieldName] = parseFloat(value);
             console.log(`Set field ${fieldName} for menu ${menuId}:`, parseFloat(value));
@@ -426,17 +432,6 @@ class TrainingTracker {
         console.log(`Menu ${menuId} after update:`, this.data.records[today].predefined[menuId]);
         this.saveData();
         this.renderCalendarView();
-    }
-
-    // 定期メニューの記録削除
-    deletePredefinedRecord(menuId) {
-        const today = this.getCurrentDateString();
-        if (this.data.records[today] && this.data.records[today].predefined && this.data.records[today].predefined[menuId]) {
-            delete this.data.records[today].predefined[menuId];
-            this.saveData();
-            this.renderDailyView();
-            this.renderCalendarView();
-        }
     }
 
     // カスタム記録削除
@@ -520,7 +515,6 @@ class TrainingTracker {
                     <div class="menu-input">
                         ${inputElement}
                     </div>
-                    ${record && Object.keys(record).length > 0 ? `<button class="delete-btn small" onclick="app.deletePredefinedRecord('${menu.id}')">削除</button>` : ''}
                 </div>
             `;
         }).join('');
